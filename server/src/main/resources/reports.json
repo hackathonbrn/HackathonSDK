@@ -1,0 +1,34 @@
+{
+  "hackathon_report": {
+    "participant": {
+      "name": "Иванов Иван Иванович",
+      "role": "разработчик"
+    },
+    "participation_details": {
+      "if_developer": {
+        "project_name": "Название проекта",
+        "team_name": "Название команды (опционально)",
+        "final_place": 1,
+        "score": 95.5,
+        "award": "Гран-при"
+      },
+      "if_expert": {
+        "expertise_domain": "AI/ML",
+        "activities": [
+          "Провёл мастер-класс по NLP",
+          "Консультировал команды"
+        ]
+      },
+      "if_judge": {
+        "evaluation_criteria": ["Инновационность", "Техническая сложность"],
+        "evaluated_projects_count": 10
+      }
+    },
+    "hackathon_info": {
+      "name": "Hackathon Future Tech 2024",
+      "date": "2024-05-15",
+      "organizer": "Компания XYZ"
+    },
+    "additional_comments": "Участник проявил высокую активность."
+  }
+}
