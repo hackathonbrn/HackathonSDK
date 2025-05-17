@@ -10,12 +10,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import ru.nofeature.hackathon.users.Roles
 
 data class RegistrationData(
-    val email: String = "",
-    val password: String = "",
-    val confirmPassword: String = "",
-    val name: String = ""
+    val name: String = "",
+    val command: String = "",
+    val project: String = "",
 )
 
 @Composable
@@ -23,15 +23,12 @@ fun RegistrationForm(
     modifier: Modifier = Modifier,
     onRegisterClick: (RegistrationData) -> Unit
 ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
+    var command by remember { mutableStateOf("") }
+    var project by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
     Column(modifier = modifier.padding(16.dp)) {
-        Text("Регистрация", modifier = Modifier.padding(bottom = 16.dp))
-
         errorMessage?.let {
             Text(
                 text = it,
@@ -41,14 +38,6 @@ fun RegistrationForm(
         }
 
         OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
-            singleLine = true
-        )
-
-        OutlinedTextField(
             value = name,
             onValueChange = { name = it },
             label = { Text("Имя") },
@@ -56,37 +45,35 @@ fun RegistrationForm(
             singleLine = true
         )
 
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Пароль") },
-            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
-            singleLine = true,
-            visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation()
-        )
+        var selectedRole by remember {
+            mutableStateOf(Roles.DEVELOPER.title)
+        }
 
-        OutlinedTextField(
-            value = confirmPassword,
-            onValueChange = { confirmPassword = it },
-            label = { Text("Подтвердите пароль") },
-            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
-            singleLine = true,
-            visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation()
-        )
+        selectItem(listOf(Roles.DEVELOPER.title, Roles.EXPERT.title, Roles.JUDGE.title)) {
+            selectedRole = it
+        }
+
+        if (selectedRole == Roles.DEVELOPER.title) {
+            selectItemWithAdd(
+                listOf("Команда 1", "команда 2")
+            ) {
+
+            }
+            selectItemWithAdd(listOf("проект 1", "проект 2")) {
+
+            }
+        }
 
         Button(
             onClick = {
-                if (password != confirmPassword) {
-                    errorMessage = "Пароли не совпадают"
-                } else if (email.isBlank() || password.isBlank() || name.isBlank()) {
+                if (name.isBlank()) {
                     errorMessage = "Заполните все поля"
                 } else {
                     errorMessage = null
                     onRegisterClick(
                         RegistrationData(
-                            email = email,
-                            password = password,
-                            confirmPassword = confirmPassword,
+                            command = command,
+                            project = project,
                             name = name
                         )
                     )
@@ -94,7 +81,7 @@ fun RegistrationForm(
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Зарегистрироваться")
+            Text("Готово")
         }
     }
 }
