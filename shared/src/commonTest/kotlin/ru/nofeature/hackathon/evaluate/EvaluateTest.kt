@@ -36,8 +36,8 @@ class EvaluateTest {
             projectA,
             judge1,
             listOf(
-                SimpleRating(innovationCriterion, 8.5, "Good idea but not completely new"),
-                SimpleRating(usabilityCriterion, 7.0, "UI needs improvement")
+                SimpleRating(innovationCriterion, 8.5, ),
+                SimpleRating(usabilityCriterion, 7.0, )
             )
         )
 

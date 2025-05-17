@@ -2,6 +2,7 @@ package ru.nofeature.hackathon
 
 import androidx.compose.runtime.*
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import ru.nofeature.hackathon.net.Ktor
 import ru.nofeature.hackathon.ui.RegistrationForm
 
 
@@ -9,7 +10,7 @@ import ru.nofeature.hackathon.ui.RegistrationForm
 @Preview
 fun App() {
     RegistrationForm{
-
+        Ktor.ktor()
     }
 
 //        EvaluateScreen()

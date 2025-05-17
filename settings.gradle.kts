@@ -10,6 +10,9 @@ pluginManagement {
                 includeGroupAndSubgroups("com.google")
             }
         }
+        maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
+        maven("https://repo1.maven.org/maven2/io/ktor/")
+
         mavenCentral()
         gradlePluginPortal()
     }
@@ -24,6 +27,9 @@ dependencyResolutionManagement {
                 includeGroupAndSubgroups("com.google")
             }
         }
+        maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
+
+        maven("https://repo1.maven.org/maven2/io/ktor/")
         mavenCentral()
     }
 }
