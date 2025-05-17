@@ -17,7 +17,7 @@ import androidx.compose.ui.window.Dialog
 @Composable
 fun selectItem(
     items: List<String>,
-    selectItem : (String) -> Unit
+    selectItem: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     var selectedItem by remember { mutableStateOf(items.firstOrNull() ?: "") }
@@ -98,6 +98,7 @@ fun selectItemWithAdd(
         StringItemCreator(
             onItemCreated = { newItem ->
                 selectedItem = newItem
+                selectItem(newItem)
             },
             buttonText = "Добавить новый элемент",
             dialogTitle = "Новый элемент списка",

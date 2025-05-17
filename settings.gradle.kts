@@ -12,7 +12,6 @@ pluginManagement {
         }
         maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
         maven("https://repo1.maven.org/maven2/io/ktor/")
-
         mavenCentral()
         gradlePluginPortal()
     }
@@ -28,7 +27,6 @@ dependencyResolutionManagement {
             }
         }
         maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
-
         maven("https://repo1.maven.org/maven2/io/ktor/")
         mavenCentral()
     }

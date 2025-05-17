@@ -48,8 +48,6 @@ kotlin {
         wasmJsMain.dependencies {
             implementation(libs.ktor.client.js)
         }
-        wasmJsTest.dependencies{
-        }
     }
 }
 

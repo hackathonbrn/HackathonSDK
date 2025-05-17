@@ -4,5 +4,4 @@ interface ProjectRating {
     val project: Project
     val judge: Judge
     val ratings: List<Rating>
-    val timestamp: Long
 }

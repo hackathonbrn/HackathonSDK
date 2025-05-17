@@ -7,5 +7,6 @@ import ru.nofeature.hackathon.team.api.Team
 data class SimpleTeam(
     override val name: String,
     override val command: String,
-    override val project: String
+    override val project: String,
+    override val role: String
 ) : Team

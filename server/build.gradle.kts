@@ -20,6 +20,8 @@ dependencies {
     implementation(libs.ktor.serverCore)
     implementation(libs.ktor.serverNetty)
     implementation(libs.ktor.serverJson)
+    implementation(libs.ktor.server.cors)
+
     testImplementation(libs.ktor.serverTestHost)
     testImplementation(libs.kotlin.testJunit)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0")
