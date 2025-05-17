@@ -12,8 +12,10 @@ import ru.nofeature.hackathon.evaluate.impl.InMemoryRatingRepository
 import ru.nofeature.hackathon.evaluate.impl.ProjectWithTeam
 import ru.nofeature.hackathon.evaluate.impl.SimpleJudge
 import ru.nofeature.hackathon.evaluate.impl.SimpleProject
+import ru.nofeature.hackathon.hackInfo.createSampleHackathon
 import ru.nofeature.hackathon.net.Ktor
 import ru.nofeature.hackathon.team.impl.SimpleTeam
+import ru.nofeature.hackathon.ui.HackathonLandingPage
 import ru.nofeature.hackathon.ui.ProjectListScreen
 import ru.nofeature.hackathon.ui.ProjectsReportScreen
 import ru.nofeature.hackathon.ui.RateProjectScreen
@@ -28,7 +30,14 @@ fun App() {
         val navController = rememberNavController()
         val repository: InMemoryRatingRepository by remember { mutableStateOf(InMemoryRatingRepository()) }
 
-        NavHost(navController, startDestination = "report") {
+        NavHost(navController, startDestination = "start") {
+            composable("start") {
+                HackathonLandingPage(
+                    createSampleHackathon(),
+                    registerClick = { navController.navigate("registration") },
+                    reportClick = {}
+                )
+            }
             composable("registration") {
                 RegistrationForm {
                     Ktor.addTeammate(

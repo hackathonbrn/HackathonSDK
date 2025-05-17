@@ -124,14 +124,14 @@ private fun ProjectCard(project: ProjectSummary, modifier: Modifier = Modifier) 
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = project.projectName,
+                        text = project.teamName,
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = project.teamName,
+                        text = project.projectName,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
                     )
