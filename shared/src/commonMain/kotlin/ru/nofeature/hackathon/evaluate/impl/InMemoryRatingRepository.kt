@@ -21,14 +21,15 @@ class InMemoryRatingRepository : RatingRepository {
         return Result.success(Unit)
     }
 
-    override suspend fun getExistingRating(project: Project, judge: Judge): ProjectRating? =
-        ratings.firstOrNull { it.project == project && it.judge == judge }
+    private var smallCache : List<ProjectWithTeam> = emptyList()
 
-    override suspend fun getProjects(): List<Project> = Ktor.loadTeams().filter {
+    override suspend fun getProjects(): List<ProjectWithTeam> = Ktor.loadTeams().filter {
         it.project.isNotEmpty()
     }.map {
-        SimpleProject(it.project)
-    }.toSet().toList()
+        ProjectWithTeam(it.project, it.command)
+    }.toSet().toList().also {
+        smallCache = it
+    }
 
     var judge: SimpleJudge? = null
 }

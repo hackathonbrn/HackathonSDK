@@ -16,6 +16,8 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.nofeature.hackathon.data.SimpleEvaluations
 import ru.nofeature.hackathon.data.SimpleTeams
+import ru.nofeature.hackathon.data.evaluateFromDb
+import ru.nofeature.hackathon.data.teamFromDb
 import ru.nofeature.hackathon.evaluate.impl.*
 import ru.nofeature.hackathon.team.impl.SimpleTeam
 
@@ -46,16 +48,7 @@ fun main() {
 fun Application.module() {
     routing {
         get("/teams") {
-            val data: List<SimpleTeam> = transaction {
-                SimpleTeams.selectAll().map {
-                    SimpleTeam(
-                        it[SimpleTeams.name],
-                        it[SimpleTeams.command],
-                        it[SimpleTeams.project],
-                        it[SimpleTeams.role],
-                    )
-                }
-            }
+            val data: List<SimpleTeam> = teamFromDb()
             val r = Json.encodeToString(data)
             call.respondText(r)
         }
@@ -71,6 +64,11 @@ fun Application.module() {
                 }
             }
             call.respondText("nice")
+        }
+
+        get("report"){
+            val jsData = Json.encodeToString(generateReport())
+            call.respondText(jsData)
         }
 
         route("evaluate") {
@@ -90,22 +88,7 @@ fun Application.module() {
                 call.respondText("nice")
             }
             get {
-                val data: List<SimpleProjectRating> = transaction {
-                    SimpleEvaluations.selectAll().groupBy {
-                        Pair(it[SimpleEvaluations.project], it[SimpleEvaluations.jujde])
-                    }.map { it ->
-                        SimpleProjectRating(
-                            project = SimpleProject(it.key.first),
-                            judge = SimpleJudge(it.key.second),
-                            ratings = it.value.map { row ->
-                                SimpleRating(
-                                    SimpleCriterion(row[SimpleEvaluations.criteria], "", 10.0),
-                                    score = row[SimpleEvaluations.score].toDouble()
-                                )
-                            }
-                        )
-                    }
-                }
+                val data: List<SimpleProjectRating> = evaluateFromDb()
                 val r = Json.encodeToString(data)
                 call.respondText(r)
             }

@@ -7,6 +7,7 @@ import io.ktor.utils.io.*
 import kotlinx.coroutines.*
 import kotlinx.serialization.json.Json
 import ru.nofeature.hackathon.Client
+import ru.nofeature.hackathon.ProjectSummary
 import ru.nofeature.hackathon.evaluate.impl.SimpleProjectRating
 import ru.nofeature.hackathon.team.impl.SimpleTeam
 
@@ -44,5 +45,12 @@ object Ktor {
                 contentType(ContentType.Text.Plain)
             }
         }
+    }
+
+    suspend fun loadReport() : List<ProjectSummary> {
+        val bodyAsString = Client.provide().get(
+            "$BASE_URL/report"
+        ).body<String>()
+        return json.decodeFromString(bodyAsString)
     }
 }

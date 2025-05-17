@@ -9,11 +9,13 @@ import androidx.navigation.toRoute
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import ru.nofeature.hackathon.evaluate.api.RatingRepository
 import ru.nofeature.hackathon.evaluate.impl.InMemoryRatingRepository
+import ru.nofeature.hackathon.evaluate.impl.ProjectWithTeam
 import ru.nofeature.hackathon.evaluate.impl.SimpleJudge
 import ru.nofeature.hackathon.evaluate.impl.SimpleProject
 import ru.nofeature.hackathon.net.Ktor
 import ru.nofeature.hackathon.team.impl.SimpleTeam
 import ru.nofeature.hackathon.ui.ProjectListScreen
+import ru.nofeature.hackathon.ui.ProjectsReportScreen
 import ru.nofeature.hackathon.ui.RateProjectScreen
 import ru.nofeature.hackathon.ui.RegistrationForm
 import ru.nofeature.hackathon.users.Roles
@@ -26,7 +28,7 @@ fun App() {
         val navController = rememberNavController()
         val repository: InMemoryRatingRepository by remember { mutableStateOf(InMemoryRatingRepository()) }
 
-        NavHost(navController, startDestination = "registration") {
+        NavHost(navController, startDestination = "report") {
             composable("registration") {
                 RegistrationForm {
                     Ktor.addTeammate(
@@ -48,12 +50,15 @@ fun App() {
                 )
             }
 
-            composable<SimpleProject> { backStackEntry ->
+            composable<ProjectWithTeam> { backStackEntry ->
                 RateProjectScreen(
                     project = backStackEntry.toRoute(),
                     onBack = { navController.popBackStack() },
                     repository = repository,
                 )
+            }
+            composable("report") {
+                ProjectsReportScreen()
             }
         }
 

@@ -13,6 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import ru.nofeature.hackathon.evaluate.api.*
 import ru.nofeature.hackathon.evaluate.impl.InMemoryRatingRepository
+import ru.nofeature.hackathon.evaluate.impl.ProjectWithTeam
 import ru.nofeature.hackathon.evaluate.impl.SimpleCriterion
 import ru.nofeature.hackathon.evaluate.impl.SimpleJudge
 import ru.nofeature.hackathon.evaluate.impl.SimpleProject
@@ -23,11 +24,11 @@ import ru.nofeature.hackathon.net.Ktor
 
 @Composable
 fun ProjectListScreen(
-    onProjectSelected: (SimpleProject) -> Unit,
+    onProjectSelected: (ProjectWithTeam) -> Unit,
     repository: InMemoryRatingRepository,
     judge: SimpleJudge
 ) {
-    val projects by produceState<List<Project>>(emptyList()) {
+    val projects by produceState<List<ProjectWithTeam>>(emptyList()) {
         value = repository.getProjects()
     }
 
@@ -47,9 +48,7 @@ fun ProjectListScreen(
             items(projects) { project ->
                 ProjectCard(
                     project = project,
-                    onClick = { onProjectSelected(project as SimpleProject) },
-                    repository = repository,
-                    judge = judge
+                    onClick = { onProjectSelected(project) },
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }
@@ -59,43 +58,29 @@ fun ProjectListScreen(
 
 @Composable
 fun ProjectCard(
-    project: Project,
-    onClick: () -> Unit,
-    repository: RatingRepository,
-    judge: Judge
+    project: ProjectWithTeam,
+    onClick: () -> Unit
 ) {
-    val existingRating by produceState<ProjectRating?>(null) {
-        value = repository.getExistingRating(project, judge)
-    }
-
     Card(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                "Команда: ${project.teamName}",
+                style = MaterialTheme.typography.headlineSmall
+            )
+            Spacer(modifier = Modifier.height(8.dp))
             Text(project.name, style = MaterialTheme.typography.headlineSmall)
             Spacer(modifier = Modifier.height(8.dp))
-            existingRating?.let {
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    "Score: ${it.ratings.sumOf { r -> r.score }}/${
-                        it.ratings.sumOf { r ->
-                            repository.getCriteria()
-                                .first { c -> c.name == r.criterion.name }.maxScore
-                        }
-                    }",
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Bold
-                )
-            }
         }
     }
 }
 
 @Composable
 fun RateProjectScreen(
-    project: SimpleProject,
+    project: ProjectWithTeam,
     onBack: () -> Unit,
     repository: InMemoryRatingRepository,
 ) {
@@ -170,7 +155,7 @@ fun RateProjectScreen(
                         valueRange = 0.0f..(criterion.maxScore.toFloat()),
                         steps = 9
                     )
-                    Text("Выбрано: ${ratings[index]}")
+                    Text("Выбрано: ${ratings[index].toString().take(4)}")
                 }
             }
         }
@@ -179,7 +164,7 @@ fun RateProjectScreen(
             onClick = {
                 Ktor.addEvaluate(
                     SimpleProjectRating(
-                        project = project,
+                        project = SimpleProject(project.name),
                         judge = repository.judge!!,
                         ratings = List(ratings.size) { index ->
                             SimpleRating(
