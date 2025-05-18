@@ -1,3 +1,10 @@
+Сервис для проведения хакатонов, есть возможность добавить участников, судей, организаторов
+Организаторы настраивают критерии оценки проектов
+Судьи оценивают проекты
+Участники указывают свои команды и названия проектов
+По итогам хакатона можно сформировать отчет о его результатах
+
+
 This is a Kotlin Multiplatform project targeting Android, Web, Server.
 
 * `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
