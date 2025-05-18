@@ -4,6 +4,7 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.utils.io.*
+import io.ktor.utils.io.core.*
 import kotlinx.coroutines.*
 import kotlinx.serialization.json.Json
 import ru.nofeature.hackathon.Client
@@ -23,9 +24,11 @@ object Ktor {
         team: SimpleTeam
     ) {
         coroutineScopen.launch {
-            Client.provide().post("$BASE_URL/addteams") {
-                body = Json.encodeToString(team)
-                contentType(ContentType.Text.Plain)
+            Client.provide().use {
+                it.post("$BASE_URL/addteams") {
+                    body = Json.encodeToString(team)
+                    contentType(ContentType.Text.Plain)
+                }
             }
         }
     }

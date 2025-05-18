@@ -35,6 +35,7 @@ fun ProjectListScreen(
     LaunchedEffect(Unit) {
         repository.judge = judge
     }
+
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -44,8 +45,8 @@ fun ProjectListScreen(
 
         Text("Проекты к оценке:", style = MaterialTheme.typography.headlineSmall)
 
-        LazyColumn {
-            items(projects) { project ->
+        FlowColumn {
+            projects.forEach { project ->
                 ProjectCard(
                     project = project,
                     onClick = { onProjectSelected(project) },

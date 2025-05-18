@@ -1,119 +1,51 @@
 package ru.nofeature.hackathon.ui
 
-import androidx.compose.animation.*
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
 import ru.nofeature.hackathon.net.Ktor
 import ru.nofeature.hackathon.team.api.Team
 import ru.nofeature.hackathon.team.impl.SimpleTeam
 import ru.nofeature.hackathon.users.Roles
-
-data class RegistrationData(
-    val name: String = "",
-    val command: String = "",
-    val project: String = "",
-    val role: String = "",
-)
-
-//@Composable
-//fun RegistrationForm(
-//    modifier: Modifier = Modifier,
-//    onRegisterClick: (RegistrationData) -> Unit
-//) {
-//    var teams by remember { mutableStateOf(listOf<Team>()) }
-//
-//    val teamsCommand by remember(teams) {
-//        mutableStateOf(teams.map { it.command }.toSet().toList() )
-//    }
-//    val teamsProject by remember(teams) {
-//        mutableStateOf(teams.map { it.project }.toSet().toList())
-//    }
-//
-//    var errorMessage by remember { mutableStateOf<String?>(null) }
-//
-//    LaunchedEffect(Unit) {
-//        launch {
-//            try {
-//                teams = Ktor.loadTeams().ifEmpty { listOf(SimpleTeam("", "", "", "")) }
-//            } catch (e: Exception) {
-//                errorMessage = e.message
-//            }
-//        }
-//    }
-//    var command by remember { mutableStateOf("") }
-//    var project by remember { mutableStateOf("") }
-//    var name by remember { mutableStateOf("") }
-//
-//    Column(modifier = modifier.padding(16.dp)) {
-//        errorMessage?.let {
-//            Text(
-//                text = it,
-//                color = Color.Red,
-//                modifier = Modifier.padding(bottom = 8.dp)
-//            )
-//        }
-//
-//        OutlinedTextField(
-//            value = name,
-//            onValueChange = { name = it },
-//            label = { Text("Имя") },
-//            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
-//            singleLine = true
-//        )
-//
-//        var selectedRole by remember {
-//            mutableStateOf(Roles.DEVELOPER.title)
-//        }
-//        selectItem(listOf(Roles.DEVELOPER.title, Roles.EXPERT.title, Roles.JUDGE.title)) {
-//            selectedRole = it
-//        }
-//
-//        if (selectedRole == Roles.DEVELOPER.title) {
-//            selectItemWithAdd(teamsCommand) { si ->
-//                command = si
-//            }
-//            selectItemWithAdd(teamsProject) { si ->
-//                project = si
-//            }
-//        }
-//
-//        Button(
-//            onClick = {
-//                if (name.isBlank()) {
-//                    errorMessage = "Заполните все поля"
-//                } else {
-//                    errorMessage = null
-//                    onRegisterClick(
-//                        RegistrationData(
-//                            command = command,
-//                            project = project,
-//                            name = name,
-//                            role = selectedRole
-//                        )
-//                    )
-//                }
-//            },
-//            modifier = Modifier.fillMaxWidth()
-//        ) {
-//            Text("Готово")
-//        }
-//    }
-//}
 
 @Composable
 fun RegistrationForm(
@@ -287,7 +219,8 @@ private fun RoleSelection(
     onRoleSelected: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val roles = listOf(Roles.DEVELOPER.title, Roles.EXPERT.title, Roles.JUDGE.title)
+    val roles =
+        listOf(Roles.DEVELOPER.title, Roles.EXPERT.title, Roles.JUDGE.title, Roles.ORGANIZER.title)
 
     Row(
         modifier = modifier,
@@ -295,11 +228,6 @@ private fun RoleSelection(
     ) {
         roles.forEach { role ->
             val isSelected = role == selectedRole
-            val backgroundColor = if (isSelected) {
-                MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
-            } else {
-                MaterialTheme.colorScheme.surface
-            }
 
             val borderColor = if (isSelected) {
                 MaterialTheme.colorScheme.primary
@@ -385,9 +313,9 @@ private fun DropdownSelectorWithAdd(
                         customText = ""
                         expanded = false
                     },
-                text = {
-                    Text(text = item)
-                })
+                    text = {
+                        Text(text = item)
+                    })
             }
         }
     }
