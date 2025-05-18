@@ -1,7 +1,7 @@
 package ru.nofeature.hackathon
 
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -15,8 +15,11 @@ import ru.nofeature.hackathon.net.Ktor
 import ru.nofeature.hackathon.team.impl.SimpleTeam
 import ru.nofeature.hackathon.ui.*
 import ru.nofeature.hackathon.users.Roles
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 
+@OptIn(ExperimentalUuidApi::class)
 @Composable
 @Preview
 fun App() {
@@ -38,8 +41,9 @@ fun App() {
                     Ktor.addTeammate(
                         SimpleTeam(it.name, it.command, it.project, it.role)
                     )
-                    if (it.role == Roles.JUDGE.title) {
-                        navController.navigate(SimpleJudge(it.name))
+                    when (it.role) {
+                        Roles.JUDGE.title -> navController.navigate(SimpleJudge(it.name))
+                        Roles.ORGANIZER.title -> navController.navigate("criterias")
                     }
                 }
             }
@@ -63,6 +67,22 @@ fun App() {
             }
             composable("report") {
                 ProjectsReportScreen()
+            }
+
+            composable("criterias") {
+                var uuid: String by remember { mutableStateOf("") }
+                CriteriaScreen(
+                    onAddCriterion = {
+                        repository.createCriteria(it)
+                        uuid = Uuid.random().toString()
+                    },
+                    onDeleteCriterion = {
+                        repository.deleteCriteria(it)
+                        uuid = Uuid.random().toString()
+                    },
+                    key = uuid,
+                    repository = repository
+                )
             }
         }
     }

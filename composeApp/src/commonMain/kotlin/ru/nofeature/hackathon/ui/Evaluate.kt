@@ -132,9 +132,12 @@ fun RateProjectScreen(
 
         Text("Оцениваем критерий:", style = MaterialTheme.typography.headlineSmall)
 
-        var ratings by remember { mutableStateOf(List(repository.getCriteria().size) { 0.0f }) }
+        var ratings : MutableList<Float> by remember { mutableStateOf(mutableListOf()) }
 
         criteria.forEachIndexed { index, criterion ->
+            if (ratings.lastIndex < index) {
+                ratings.add(0f)
+            }
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -149,7 +152,7 @@ fun RateProjectScreen(
                     Slider(
                         value = ratings[index],
                         onValueChange = {
-                            ratings = List<Float>(ratings.size) { i ->
+                            ratings = MutableList<Float>(ratings.size) { i ->
                                 if (index == i) it else ratings[i]
                             }
                         },

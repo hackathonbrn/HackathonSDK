@@ -4,16 +4,17 @@ import ru.nofeature.hackathon.evaluate.api.*
 import ru.nofeature.hackathon.net.Ktor
 
 class InMemoryRatingRepository : RatingRepository {
-    private val criteria = listOf(
-        SimpleCriterion("Инновационность", "Оригинальность решения", 10.0),
-        SimpleCriterion("Технологичность", "Качество технической реализации", 10.0),
-        SimpleCriterion("Дизайн", "Качество UI/UX ", 10.0),
-        SimpleCriterion("Практичность", "Реальная применимость", 10.0)
-    )
 
     private val ratings = mutableListOf<ProjectRating>()
 
-    override fun getCriteria(): List<Criterion> = criteria
+    override suspend fun getCriteria(): List<SimpleCriterion> = Ktor.loadCriterion()
+
+    fun createCriteria(criterion: SimpleCriterion) = Ktor.createCriterion(
+        criterion
+    )
+    fun deleteCriteria(criterion: SimpleCriterion) = Ktor.deleteCriterion(
+        criterion
+    )
 
     override suspend fun submitRating(rating: ProjectRating): Result<Unit> {
         ratings.removeAll { it.project == rating.project && it.judge == rating.judge }
@@ -33,4 +34,3 @@ class InMemoryRatingRepository : RatingRepository {
 
     var judge: SimpleJudge? = null
 }
-

@@ -9,6 +9,7 @@ import kotlinx.coroutines.*
 import kotlinx.serialization.json.Json
 import ru.nofeature.hackathon.Client
 import ru.nofeature.hackathon.ProjectSummary
+import ru.nofeature.hackathon.evaluate.impl.SimpleCriterion
 import ru.nofeature.hackathon.evaluate.impl.SimpleProjectRating
 import ru.nofeature.hackathon.team.impl.SimpleTeam
 
@@ -55,5 +56,31 @@ object Ktor {
             "$BASE_URL/report"
         ).body<String>()
         return json.decodeFromString(bodyAsString)
+    }
+
+    suspend fun loadCriterion() : List<SimpleCriterion> {
+        val bodyAsString = Client.provide().get(
+            "$BASE_URL/criteries"
+        ).body<String>()
+        return json.decodeFromString(bodyAsString)
+    }
+
+    @OptIn(InternalAPI::class)
+    fun createCriterion(criterion: SimpleCriterion) {
+        coroutineScopen.launch {
+            Client.provide().post("$BASE_URL/criteries") {
+                body = Json.encodeToString(criterion)
+                contentType(ContentType.Text.Plain)
+            }
+        }
+    }
+    @OptIn(InternalAPI::class)
+    fun deleteCriterion(criterion: SimpleCriterion) {
+        coroutineScopen.launch {
+            Client.provide().delete("$BASE_URL/criteries") {
+                body = Json.encodeToString(criterion)
+                contentType(ContentType.Text.Plain)
+            }
+        }
     }
 }
